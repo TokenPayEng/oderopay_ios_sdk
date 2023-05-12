@@ -20,8 +20,8 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .binaryTarget(
                  name: "OderoPaySdk",
-                 url: "https://github.com/TokenPayEng/oderopay_ios_sdk/OderoPaySdkXcFramework.zip",
-                 checksum: "b3c15b2b20d72a4b22df7bd4a9bbbf43c7218b686b205b3fd3a27d79a295f9bc"
+                 url: "http://kftech.co/ios_sdk/OderoPaySdk.zip",
+                 checksum: "7e6fac906b672a08151703422d678e0071b5645111e84fd5caff282a034e8b47"
              )
     ]
 )
