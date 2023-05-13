@@ -20,7 +20,7 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .binaryTarget(
                  name: "OderoPaySdk",
-                 url: "https://gitlab.com/kftech/oderopaysdk/-/raw/main/OderoPaySdk.zip?inline=false",
+                 url: "https://gitlab.com/kafatech/oderopayframework/-/raw/master/OderoPaySdk.zip?inline=false",
                  checksum: "7e6fac906b672a08151703422d678e0071b5645111e84fd5caff282a034e8b47"
              )
     ]
