@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  OderoPaySdkSampleApp
 //
-//  Created by Kadir on 12.05.2023.
+//  Created by OderoPay on 12.05.2023.
 //
 
 import UIKit

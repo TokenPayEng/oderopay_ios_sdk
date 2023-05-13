@@ -2,18 +2,25 @@
 //  AppDelegate.swift
 //  OderoPaySdkSampleApp
 //
-//  Created by Kadir on 12.05.2023.
+//  Created by OderoPay on 12.05.2023.
 //
 
 import UIKit
+import OderoPaySdk;
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        do {
+           try OderoPayFactory.getInstance().initSDK(environment:.SANDBOX_TR)
+        } catch OderoException.InvalidInput(let errorMessage) {
+           print(errorMessage)
+        } catch OderoException.SDKAlreadyInitialized(let errorMessage) {
+           print(errorMessage)
+        } catch {
+           print("An unexpected error occurred.")
+        }
         return true
     }
 
@@ -30,7 +37,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-
 
 }
 
