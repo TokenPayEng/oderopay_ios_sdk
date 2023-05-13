@@ -1,276 +1,183 @@
-# OderoPaySdk
+# OderoPay Payment SDK
 
-OderoPay is a Swift Package that lets you integrate your iOS application with the Odero Payment Ecosystem.
+## 1. Overview
 
-## Installation
+The OderoPay SDK is a software development kit that allows developers to integrate payment functionality into their applications.
+With this SDK, users can securely and easily make payments within the app.
+The OderoPay SDK is compatible with iOS 13 above.
+
+## 2. Support
+OderoPay supports **Visa, Visa Electron, MasterCard, Maestro and American Express** card associations.
+
+OderoPay supports following payment: **Single Card, Multiple Cards**
+
+OderoPay supports **3DS Secure** Payment
+
+OderoPay supports **Card Storage** feature
+## 3. Getting Started
+
+### 3.1 Installation
 
 In Xcode open `File` => `Add Packages...` => enter this Github repository. Use up to latest minor version to get the latest stable version.
 
-## Support
+**Add the repository to your project:**
 
-OderoPay supports `Visa`, `Visa Electron`, `MasterCard`, `Maestro` and `American Express` card associations.
+```java
+https://gitlab.com/kafatech/oderopayframework
+```
 
-OderoPay supports following payment: `Single Card`, `Multiple Cards`, `TokenFlex`
-
-OderoPay supports 3DS Secure Payment
-
-OderoPay supports Card Storage feature
-
-## Usage
-
-If you are in possesion of _API_KEY_ and _SECRET_KEY_ then you can proceed further. Otherwise visit Merchant Panel and retrieve _API_KEY_ and _SECRET_KEY_.
-
-In your project's `AppDelegate` file add the following code inside the application(didFinishLaunchingWithOptions) function. You can copy the code as follows:
+## 4. SDK Initialization
+To initialize the SDK, add the following code in your AppDelegate class :
 
 ```swift
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        OderoPay.setEnvironment(to: .SANDBOX)
-        OderoPay.authorizeWithKeys(apiKey: "QqLEuyZcztlikVSfLJZNLwBCFYtphFzk", secretKey: "cONMqzNoYFvOshYuSjybwqJrbjJygian")
+        do {
+           try OderoPayFactory.getInstance().initSDK(environment:.SANDBOX_TR)
+        } catch OderoException.InvalidInput(let errorMessage) {
+           print(errorMessage)
+        } catch OderoException.SDKAlreadyInitialized(let errorMessage) {
+           print(errorMessage)
+        } catch {
+           print("An unexpected error occurred.")
+        }
         return true
     }
 ```
 
-`OderoPay.setEnvironment(to: _)` function lets you choose between three environments: `SANDBOX`, `PROD_TR` and `PROD_AZ`
+## 5. Usage
 
-`OderoPay.authorizeWithKeys(apiKey: _, secretKey: _)` function lets you set your specific keys.
+### 5.1 Init Service
+The init service is used to initialize the OderoPay SDK with the payment token obtained from our backend. You should call this function before calling the startPayment() function.
 
-Add `View` to your .storyboard file, place it where you would like payment button to appear. In the
-IdentityInspector select `OderoButtonView` class for your newly added `View`. Connect IBOutlet
-to the related ViewController class.
- 
+##### 5.1.1 Example
+To obtain the initialization token required for starting the SDK, you should make a request to the initialization service provided by our backend. Once you have obtained the initialization token, you can pass it to the startPayment() function to initialize the OderoPay SDK.
+###### Request
 ```swift
-    @IBOutlet weak var oderoPayButtonView: OderoPayButtonView!
-```
-In order to be able to navigate to the Payment Page you need to do the following:
-
-1. Instantiate navigation controller for the OderoPay Button
-2. Set desired `CheckoutForm` and pass it to the OderoPay Button.
-3. Set desired size and color to the View that represents the OderoPay Button (Optional)
-
-If you want to display the Payment Page in Native View you can omit the following part.
-
-4. You can display the Payment Page either in Native View or Web View (Optional)
-
-Code example:
-
-```swift
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.        
-        oderoPayButtonView.addOderoPayButtonOutline(colored: .black)
-        oderoPayButtonView.setOderoPayImageSize(height: 40, width: 80)
-        oderoPayButtonView.initNavigationController(named: self.navigationController!)
-        
-        // to display Payment Page (Common Payment Page) as WebView
-        // OderoPay.changeToWebView(true)
-        
-        OderoPay.setCheckoutForm(
-            to: CheckoutForm(
-                orderNumber: "from_iOS_Package_#2",
-                ofProducts: products.map { product in PaymentItem(named: product.name, for: product.totalPrice)},
-                ofType: .PRODUCT,
-                priceToPayInitial: totalPrice,
-                priceToPayAfterDiscounts: totalPrice,
-                in: .TRY
-            )
+var call = requestInitToken(
+    InitRequest(
+        paymentGroup = "PRODUCT",
+        callbackUrl = "NO_CALLBACK_URL",
+        paidPrice = 100,
+        price = 100,
+        conversationId = "conversationid", //ForMultiPayment
+        currency = "TRY",//Currency
+        cardUserKey = "card-user-key", //For StoredCard Feature
+        items = listOf(
+            Item("Product", 100)
         )
+    )
+)
+```
+###### Response
+```swift
+class InitTokenResponse {
+    var data : InitTokenData?
+}
+
+class InitTokenData {
+    var token : String? // Start SDK with this token
+    var pageUrl: String?
+}
+```
+
+### 5.2 Start Payment
+The startPayment() function is used to start the payment process in the OderoPay SDK. You should call this function when the user initiates a payment in your application.
+
+##### 5.2.1 Function Parameters
+The startPayment() function takes the following mandatory parameters:
+
+- **navigationController**: To navigate to the common payment page you need to add navigation controller
+- **token**: the token required to initiate the payment process.
+- **delegate**: an instance of OderoPayResultListener to receive callbacks from the SDK
+
+##### 5.2.2 Example
+Here's an example of how to use the startPayment() function in your application:
+
+```swift
+ let token = "your-payment-token"
+ 
+ private func startPaymentViaOderoPaySDK(withToken token: String){
+        do {
+            // Language can be forced, this feature is optinoal.
+            try self.forceOderoSdkLanguage()
+            
+            // Start payment
+            try OderoPayFactory.getInstance().getOderoPay().startPayment(
+                navigationController:self.navigationController!,
+                token: token,
+                delegate: self)
+        } catch OderoException.InvalidInput(let errorMessage) {
+            print(errorMessage)
+        } catch OderoException.SDKAlreadyInitialized(let errorMessage) {
+            print(errorMessage)
+        } catch {
+            print("An unexpected error occurred.")
+        }
     }
 ```
-
-## Functionality and Customizability
-
-OderoPay Swift Package comes with UI customizability and detailed description of functionality. First comes customizability of the Common Payment Page, next functionality description.
-
-## Using Custom or Pre-defined End Screens
-
-OderoPay Swift Package comes with built in, pre-defined `success` and `error` payment result screens. However if you want to use your own such screens, you have a couple of options of how to integrate your screens to the overall payment flow. 
-
-Hint: Instantiate them all at the same place, during the initial setup. You can set custom screen right after setting the checkout form.
-
-Requirements:
-1. You have to call function that enables the usage of custom screens.
-2. Next, you have to instantiate two screens: one for `success` scenario and one for the `error`/`failure` scenario.
-3. Lastly, you either pass these screens as ViewControllers or Storyboards with ViewController Identifier.
-
-Functions headers:
+##### 5.2.3 Payment Callbacks
+The results of the payment is listened to with the following methods:
 
 ```swift
-    OderoPay.useCustomEndScreens(_ value: Bool)
-```
-
-```swift    
-    // success screen which requires your custom Success Screen's ViewController
-    OderoPay.instantiateCustomSuccessScreenWith(viewController: UIViewController)
-```
+extension ViewController : OderoPayResultListener {
+    func onOderoPaySuccess(result: OderoPaySdk.OderoResult) {
+        print("onOderoPaySuccess, payment type is = \(result.getPaymentType()) and payment id is = \(String(describing: result.getPaymentIdList()))")
+    }
     
-```swift    
-    // success screen which requires your custom Success Screen's Storyboard with ViewControllers Identified (ID)
-    OderoPay.instantiateCustomSuccessScreenWith(storyboard: UIStoryboard, identifiedBy: String)
+    func onOderoPayCancelled() {
+        print("onOderoPayCancelled")
+    }
+    
+    func onOderoPayFailure(errorId: Int, errorMsg: String?) {
+        print("onOderoPayFailure, errorMsg: \(String(describing: errorMsg)) and errorId: \(errorId)")
+    }
+}
 ```
- 
-```swift    
-    // error screen which requires your custom Error/Warning Screen's ViewController
-    OderoPay.instantiateCustomErrorScreenWith(viewController: UIViewController)
-```
- 
-```swift    
-    // error screen which requires your custom Error/Warning Screen's Storyboard with ViewControllers Identified (ID)
-    OderoPay.instantiateCustomErrorScreenWith(storyboard: UIStoryboard, identifiedBy: String)
-```
+## 6. Handling Exception
+The SDK provides the following exception classes that you can use to handle errors in your application:
 
-Code Example:
+##### SDKAlreadyInitialized
+This exception is thrown when you try to initialize the SDK more than once. It indicates that the SDK has already been initialized and further attempts to initialize it are unnecessary.
+
+##### InvalidInput
+This exception is thrown when the SDK receives invalid input from your application. It indicates that the input provided to the SDK is incorrect and needs to be corrected before proceeding.
+
+##### SDKNotInitialized
+This exception is thrown when you try to use the SDK before it has been initialized. It indicates that the SDK has not yet been properly set up and cannot be used until it has been initialized.
+
+## 7. Customization Interfaces
+##### OderoPayLibrary
+```swift
+    func startPayment(navigationController: UINavigationController?, token : String?, delegate : OderoPayResultListener?) throws
+    func isInitialized() -> Bool
+    func forceLanguage(language: Language)
+```
+##### OderoPayButtonCustomizer
 
 ```swift
-    OderoPay.useCustomEndScreens(true)  // enables custom screens, now you can call above methods
-    OderoPay.useCustomEndScreens(false) // comes by default
+    func setStrokeWidthAndColor(width: Float,color :Int)
+    func setSize(width: Int, height: Int)
+    func setRoundness(radius: Float)
 ```
 
+## 8. Environments
+The Environment enum is used to specify the environment that the OderoPay SDK should be initialized with. You can choose between the following environments:
 
-## Enabling and Disabling Payment Methods
+- **SANDBOX_TR**: the sandbox environment for Turkey
+- **SANDBOX_AZ**: the sandbox environment for Azerbaijan
+- **PROD_TR**: the production environment for Turkey
+- **PROD_AZ**: the production environment for Azerbaijan
 
-As it was stated OderoPay Swift Package supports following payments - `Single Card`, `Multiple Cards`, `TokenFlex`. Options which will be enabled or disabled are chosen by your company during the onboarding to the OderoPay System using the Merchant Panel.
-
-## Navigating to Common Payment Page using OderoPay button
-
-To navigate to the common payment page you need to add navigation controller to the OderoPay button.
-
-Function header:
-
-```swift
-    oderoPayButtonView.initNavigationController(named: UINavigationController)
-```
-
-Code example:
-
-```swift
-    oderoPayButtonView.initNavigationController(named: self.navigationController!)
-```
-
-## Setting Checkout Form
-
-`CheckoutForm` has the following initializers
-
-```swift
-   init(
-        orderNumber: String?,
-        ofProducts: [PaymentItem],
-        ofType paymentType: PaymentType,
-        priceToPayInitial: Double,
-        priceToPayAfterDiscounts: Double,
-        in currency: Currency,
-        withExistingWalletBalance: Double? = nil,
-        fromBuyerWithId: Double? = nil,
-        withUserEmail: String? = nil,
-        withUserCardKey: String? = nil
-    )
-```
-
-`PaymentItem` has the following initializers
-
-```swift
-    public init(
-        named name: String,
-        for price: Double,
-        externalId: String? = nil,
-        subMerchantId: Int? = nil,
-        subMerchantPrice: Double? = nil
-    )
-```
-
-`PaymentType` has values of `PRODUCT`, `LISTING`, `SUBSCRIPTION`
-
-`Currency` has values of `AZN`, `TRY`, `USD`, `EURO`
-
-In order to set the checkout form call you can look for the following code example
-
-Code example:
-
-```swift
-    OderoPay.setCheckoutForm(
-        to: CheckoutForm(
-            orderNumber: "from_iOS_Package_#2",
-            ofProducts: products.map { product in PaymentItem(named: product.name, for: product.totalPrice)},
-            ofType: .PRODUCT,
-            priceToPayInitial: totalPrice,
-            priceToPayAfterDiscounts: totalPrice,
-            in: .TRY
-        )
-    )
-```
-
-
-## Changing OderoPay button color (Currently AZ Version Only)
-
-OderoPay button color in Azerbaijan (for now) comes in two variations: black and white. You can also add button outline to the button itself. It's recommended to use black color variation or white color with black outline variation for light backgrounds, and white color variation for the dark backgrounds.
-
-Function header:
-
-```swift
-    oderoPayButtonView.changeDefaultColor(fromWhiteToBlack: Bool)
-```
-
-Code example:
-
-```swift
-    oderoPayButtonView.changeDefaultColor(fromWhiteToBlack: true)
-```
-
-## Adding outline to OderoPay button
-
-You can add any desired color outline to the OderoPay button. It's recommended only to add black colored outline to the white colored button.
-
-Function header:
-
-```swift
-    oderoPayButtonView.addOderoPayButtonOutline(colored: UIColor)
-```
-
-Code example:
-
-```swift
-    oderoPayButtonView.addOderoPayButtonOutline(colored: .black)
-```
-
-## Removing outline from OderoPay button
-
-You can remove added outline from the OderoPay button just as easy as adding it.
-
-Function header:
-
-```swift
-    oderoPayButtonView.removeOderoPayButtonOutline()
-```
-
-Code example:
-
-```swift
-    oderoPayButtonView.removeOderoPayButtonOutline()
-```
-      
-## Change OderoPay image size
-
-You can change the size of the OderoPay sign/image inside the OderoPay button as you see fit depending on the size of your OderoPay button itself.
-
-Function header:
-
-```swift
-    oderoPayButtonView.setOderoPayImageSize(height: CGFloat, width: CGFloat)
-```
-
-Code example:
-
-```swift
-    oderoPayButtonView.setOderoPayImageSize(height: 40, width: 80)
-```
-
-## Known Warnings
+## 9. Known Warnings
 
 Since iOS 16 WKWebKit causes a `@main This method should not be called on main thread warning`. Can be ignored.
 
 Some of the textfield allegedly cause a constraint break. Can be ignored.
 
-## License
+## 10. License
+Copyright © 2023 Token Payment Services and Electronic Money Inc. All rights reserved.
 
-Copyright © 2022 Token Payment Services and Electronic Money Inc. All rights reserved.
+[![N|Solid](http://kftech.co/poweredby.png)](http://kftech.co/)
+
+
 
