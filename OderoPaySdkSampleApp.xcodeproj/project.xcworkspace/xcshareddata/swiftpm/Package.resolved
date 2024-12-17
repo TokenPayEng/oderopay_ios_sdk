@@ -1,14 +1,15 @@
 {
+  "originHash" : "b4879a341c0f2e3f921a99bf0ba6f6976023cd1876aaa41f11449c2cf5215f20",
   "pins" : [
     {
       "identity" : "oderopayframework",
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.com/kafatech/oderopayframework",
       "state" : {
-        "branch" : "master",
-        "revision" : "42722ceb16f93d909ebbb9fa412cb06dd80ac02c"
+        "revision" : "4c15c6d10ec32eaa7ca7fdfec471c72fb5354cb2",
+        "version" : "1.0.6"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -27,8 +27,8 @@ class ViewController: UIViewController {
     // Starting payment via OderoPay sdk
     private func startPaymentViaOderoPaySDK(withToken token: String){
         do {
-            // Language can be forced, this feature is optinoal.
-            try self.forceOderoSdkLanguage()
+            // Apply sdk optinal settings
+            try configureSDKSettings()
                         
             // Start payment
             try OderoPayFactory.getInstance().getOderoPay().startPayment(
@@ -44,10 +44,17 @@ class ViewController: UIViewController {
         }
     }
     
-    // Four different languages available.
-    private func forceOderoSdkLanguage() throws{
-        if forceLanguage{
-            try OderoPayFactory.getInstance().getOderoPay().forceLanguage(language: Language.RUSSIAN)
+    // Configures the SDK settings
+    private func configureSDKSettings() throws {
+        // Four different languages available.
+        let language = forceLanguage ? Language.RUSSIAN : Language.BASE
+        try OderoPayFactory.getInstance().getOderoPay().forceLanguage(language: language)
+
+        // Set the payment button color
+        if let color = UIColor(hex: "253FC3") {
+            try OderoPayFactory.getInstance().getOderoPay().paymenButtonColor(colored: color)
+        } else {
+            print("Invalid HEX color")
         }
     }
 }

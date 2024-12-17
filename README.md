@@ -151,13 +151,23 @@ This exception is thrown when you try to use the SDK before it has been initiali
     func startPayment(navigationController: UINavigationController?, token : String?, delegate : OderoPayResultListener?) throws
     func isInitialized() -> Bool
     func forceLanguage(language: Language)
+    func paymenButtonColor(colored: color)
 ```
-##### OderoPayButtonCustomizer
 
 ```swift
-    func setStrokeWidthAndColor(width: Float,color :Int)
-    func setSize(width: Int, height: Int)
-    func setRoundness(radius: Float)
+    // Configures the SDK settings
+    private func configureSDKSettings() throws {
+        // Four different languages available.
+        let language = forceLanguage ? Language.RUSSIAN : Language.BASE
+        try OderoPayFactory.getInstance().getOderoPay().forceLanguage(language: language)
+
+        // Set the payment button color
+        if let color = UIColor(hex: "253FC3") {
+            try OderoPayFactory.getInstance().getOderoPay().paymenButtonColor(colored: color)
+        } else {
+            print("Invalid HEX color")
+        }
+    }
 ```
 
 ## 8. Environments
