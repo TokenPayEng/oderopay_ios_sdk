@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://gitlab.com/kafatech/oderopayframework",
       "state" : {
-        "revision" : "4c15c6d10ec32eaa7ca7fdfec471c72fb5354cb2",
-        "version" : "1.0.6"
+        "revision" : "74d53b36736952afb0ca106527142ac0efebd0f2",
+        "version" : "1.0.7"
       }
     }
   ],

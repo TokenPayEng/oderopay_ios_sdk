@@ -52,7 +52,7 @@ class ViewController: UIViewController {
 
         // Set the payment button color
         if let color = UIColor(hex: "253FC3") {
-            try OderoPayFactory.getInstance().getOderoPay().paymenButtonColor(colored: color)
+            try OderoPayFactory.getInstance().getOderoPay().paymentButtonColor(colored: color)
         } else {
             print("Invalid HEX color")
         }
