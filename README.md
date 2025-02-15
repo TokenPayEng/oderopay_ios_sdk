@@ -187,7 +187,7 @@ Some of the textfield allegedly cause a constraint break. Can be ignored.
 ## 10. License
 Copyright © 2023 Token Payment Services and Electronic Money Inc. All rights reserved.
 
-[![N|Solid](http://kftech.co/poweredby.png)](http://kftech.co/)
+[![N|Solid](https://kafa.tech/poweredby.png)](https://kafa.tech/)
 
 
 

@@ -14,7 +14,6 @@
 		13F700C42A0E6F5000F35254 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13F700C32A0E6F5000F35254 /* Assets.xcassets */; };
 		13F700C72A0E6F5000F35254 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 13F700C52A0E6F5000F35254 /* LaunchScreen.storyboard */; };
 		B7175AC22D11B2A500EB2F98 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7175AC12D11B2A500EB2F98 /* UIColorExtension.swift */; };
-		B7175AC62D12F81700EB2F98 /* OderoPaySdk in Frameworks */ = {isa = PBXBuildFile; productRef = B7175AC52D12F81700EB2F98 /* OderoPaySdk */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,7 +52,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7175AC62D12F81700EB2F98 /* OderoPaySdk in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,7 +122,6 @@
 			);
 			name = OderoPaySdkSampleApp;
 			packageProductDependencies = (
-				B7175AC52D12F81700EB2F98 /* OderoPaySdk */,
 			);
 			productName = OderoPaySdkSampleApp;
 			productReference = 13F700B72A0E6F4E00F35254 /* OderoPaySdkSampleApp.app */;
@@ -199,7 +196,7 @@
 			);
 			mainGroup = 13F700AE2A0E6F4E00F35254;
 			packageReferences = (
-				B7175AC42D12F81700EB2F98 /* XCRemoteSwiftPackageReference "oderopayframework" */,
+				B7AFC55D2D60A0C900177465 /* XCRemoteSwiftPackageReference "oderopayframework" */,
 			);
 			productRefGroup = 13F700B82A0E6F4E00F35254 /* Products */;
 			projectDirPath = "";
@@ -582,23 +579,15 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B7175AC42D12F81700EB2F98 /* XCRemoteSwiftPackageReference "oderopayframework" */ = {
+		B7AFC55D2D60A0C900177465 /* XCRemoteSwiftPackageReference "oderopayframework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://gitlab.com/kafatech/oderopayframework";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.7;
+				minimumVersion = 1.0.8;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		B7175AC52D12F81700EB2F98 /* OderoPaySdk */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = B7175AC42D12F81700EB2F98 /* XCRemoteSwiftPackageReference "oderopayframework" */;
-			productName = OderoPaySdk;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 13F700AF2A0E6F4E00F35254 /* Project object */;
 }
