@@ -196,7 +196,7 @@
 			);
 			mainGroup = 13F700AE2A0E6F4E00F35254;
 			packageReferences = (
-				B7A68CEE2E7020080077A218 /* XCRemoteSwiftPackageReference "oderopayframework" */,
+				B7546D8A2E7047D5002F7852 /* XCRemoteSwiftPackageReference "oderopayframework" */,
 			);
 			productRefGroup = 13F700B82A0E6F4E00F35254 /* Products */;
 			projectDirPath = "";
@@ -579,12 +579,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		B7A68CEE2E7020080077A218 /* XCRemoteSwiftPackageReference "oderopayframework" */ = {
+		B7546D8A2E7047D5002F7852 /* XCRemoteSwiftPackageReference "oderopayframework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://gitlab.com/kafatech/oderopayframework";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.11;
+				minimumVersion = 1.0.12;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
